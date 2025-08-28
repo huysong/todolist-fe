@@ -1,0 +1,83 @@
+<div class="todo-container">
+  <mat-card class="todo-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>task_alt</mat-icon>
+        Danh sách công việc
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Add new todo -->
+      <div class="add-todo">
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-label>Thêm công việc mới</mat-label>
+          <input 
+            matInput 
+            [(ngModel)]="newTodoTitle" 
+            (keyup.enter)="addTodo()"
+            placeholder="Nhập tên công việc...">
+          <mat-icon matSuffix>add_task</mat-icon>
+        </mat-form-field>
+        <button 
+          mat-raised-button 
+          color="primary" 
+          (click)="addTodo()"
+          [disabled]="!newTodoTitle.trim()">
+          <mat-icon>add</mat-icon>
+          Thêm
+        </button>
+      </div>
+
+      <!-- Loading -->
+      <div *ngIf="loading" class="loading">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Đang tải...</p>
+      </div>
+
+      <!-- Todo list -->
+      <div *ngIf="!loading" class="todo-list">
+        <div *ngIf="todos.length === 0" class="empty-state">
+          <mat-icon>assignment_turned_in</mat-icon>
+          <p>Chưa có công việc nào. Hãy thêm công việc đầu tiên!</p>
+        </div>
+
+        <mat-list *ngIf="todos.length > 0">
+          <mat-list-item *ngFor="let todo of todos" class="todo-item">
+            <mat-checkbox
+              [checked]="todo.isDone"
+              (change)="editTodo(todo)"
+              [color]="'primary'">
+            </mat-checkbox>
+            
+            <span 
+              class="todo-title"
+              [class.completed]="todo.isDone">
+              {{ todo.title }}
+            </span>
+            
+            <span class="spacer"></span>
+            
+            <button 
+              mat-icon-button 
+              color="warn"
+              (click)="deleteTodo(todo)"
+              matTooltip="Xóa công việc">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-list-item>
+        </mat-list>
+      </div>
+
+      <!-- Statistics -->
+      <div *ngIf="todos.length > 0" class="stats">
+        <mat-divider></mat-divider>
+        <p>
+          <strong>Tổng số:</strong> {{ todos.length }} | 
+          <strong>Hoàn thành:</strong> {{ completedTodosCount }} | 
+          <strong>Còn lại:</strong> {{ remainingTodosCount }}
+        </p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
